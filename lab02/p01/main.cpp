@@ -14,7 +14,13 @@ int MaxLength = 0;
 int nSteps = 0;
 for(int i = a; i <= b; ++i)
 {
-   if() 
+    int cur = i;
+    int nSteps = 1;
+    while (cur != 1) {
+        cur = cur % 2 == 0 
+    }
+    
+    
 }
 }
 
