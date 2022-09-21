@@ -10,23 +10,28 @@ int solve(int a, int b) {
         swap(a, b);
     }
 
-int MaxLength = 0;
+int maxLength = 0;
 int nSteps = 0;
 for(int i = a; i <= b; ++i)
 {
     int cur = i;
     int nSteps = 1;
     while (cur != 1) {
-        cur = cur % 2 == 0 
+        cur = cur % 2 == 0 ? cur / 2 : 3 * cur + 1;
+        ++nSteps;
     }
-    
-    
-}
+    maxLength = max(nSteps, maxLength);
+    }
+    return maxLength;
 }
 
 
 int main()
 {
-    for (int a, b; cin >> a >> b;)
     iostream::sync_with_stdio(false);
+
+        for (int a, b; cin >> a >> b;)
+    {
+        cout << a << ' ' << b << ' ' << solve(a,b) << '\n';
+    }
 }
