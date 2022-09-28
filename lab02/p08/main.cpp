@@ -10,12 +10,25 @@ int main()
     iostream::sync_with_stdio(false);
 
     int numQuotes = 0;
-    for (char ch; cin.get(ch);)
+    for (char c; cin.get(c);)
     {
-    if (ch == '\"')
+        if (c == '\"')
         {
             ++numQuotes;
-            if (numQuotes % 2 ==  '\'');
+            if (numQuotes % 2 != 0)
+            {
+                cout.put('`');
+                cout.put('`');
+            }
+            else
+            {
+                cout.put('\'');
+                cout.put('\'');
+            }
+        }
+        else
+        {
+            cout.put(c);
         }
     }
 }
