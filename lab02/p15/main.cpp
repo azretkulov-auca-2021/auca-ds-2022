@@ -12,14 +12,29 @@ int main()
     int t;
     cin >> t;
 
-    for (int i = 1; i <= t; i++)
-    {
-        vector<string> v1;
-        vector<int> v2;
+    for (int i = 1; i <= t; i++) {
         int max = 0;
+        string str;
+        int a;
+        vector<string> s;
+        vector<int> in;
+        for (int j = 0; j < 10; j++) {
+            cin >> str >> a;
+            s.push_back(str);
+            in.push_back(a);
+            if (in[j] >= max) {
+                
+                max = in[j];
+            }
+        }
 
-        for (int j = 0; j < 10; j++) {}
+        cout << "Case #" << i << ":" << endl;
 
+        for (int k = 0; k < sz(in); k++) {
+
+            if (in[k] == max) {
+                cout << s[k] << endl;
+            }
+        }
     }
-    
 }
