@@ -5,6 +5,23 @@
 
 using namespace std;
 
+template <typename C>
+string containerToStr(const C &c) {
+    ostringstream sout;
+    bool isFirst = true;
+    sout << "{";
+    for (const auto &e : c) {
+        if (!isFirst) {
+            sout << ", ";
+        }
+        sout << e;
+        isFirst = false;
+    }
+    sout << "}";
+
+    return sout.str();
+}
+
 TEST_CASE("Deafult constructor") {
     vector<int> v;
 
@@ -12,16 +29,96 @@ TEST_CASE("Deafult constructor") {
     REQUIRE(v.size() == 0);
 }
 
+TEST_CASE("constructor with size")
+{
+    vector<int> v(5);
+
+    REQUIRE(v.size() == 5);
+
+    for (auto i : v)
+    {
+        REQUIRE(v[i] == 0);
+    }
+}
+
+TEST_CASE("constructor with size and initial value")
+{
+    vector<int> v(5, 2);
+
+    REQUIRE(v.size() == 5);
+
+    for (auto i : v)
+    {
+        REQUIRE(i == 2);
+    }
+}
 TEST_CASE("Copy constructor") {
     vector<int> v = {1, 2, 3, 4, 5};
 
-    //TODO
+    vector<int> v2 = v;
+
+    REQUIRE(v2.size() == 5);
+    REQUIRE(containerToStr(v2) == "{1, 2, 3, 4, 5}");
+
+    v[1] = 666;
+    v2[3] = 21;
+
+    REQUIRE(containerToStr(v) == "{1, 666, 3, 4, 5}");
+    REQUIRE(containerToStr(v2) == "{1, 2, 3, 21, 5}");
+}
+
+TEST_CASE("assignment operator")
+{
+    vector<int> v = {1, 2, 3, 4, 5};
+    vector<int> c = {5, 6, 7, 8, 9};
+
+    c = v;
+
+    REQUIRE(c[0] == 1);
+
+    v[1] = 21;
+    c[4] = 99;
+
+    REQUIRE(containerToStr(v) == "{1, 21, 3, 4, 5}");
+    REQUIRE(containerToStr(c) == "{1, 2, 3, 4, 99}");
+
+    v = vector<int>();
+
+    REQUIRE(v.size() == 0);
+}
+
+TEST_CASE("move constructor")
+{
+    vector<int> v = {1, 2, 3};
+    vector<int> v2 = move(v);
+
+    REQUIRE(containerToStr(v) == "{}");
+    REQUIRE(containerToStr(v2) == "{1, 2, 3}");
+}
+
+TEST_CASE("move assignment")
+{
+    vector<int> v = {1, 2, 3};
+    vector<int> v2 = {4, 5, 6};
+
+    v2 = move(v);
+
+    REQUIRE(containerToStr(v) == "{}");
+    REQUIRE(containerToStr(v2) == "{1, 2, 3}");
 }
 
 TEST_CASE("push back") {
     vector<int> v;
 
-    //TODO
+    v.push_back(1);
+    v.push_back(2);
+    v.push_back(3);
+    v.push_back(4);
+    v.push_back(5);
+
+    REQUIRE(v.size() == 5);
+    REQUIRE(containerToStr(v) == "{1, 2, 3, 4, 5}");
+    REQUIRE(v.capacity() == 8);
 }
 
 TEST_CASE("back") {
@@ -49,4 +146,118 @@ TEST_CASE("[]") {
     v.assign(1, 100);
 
     REQUIRE(v[0] == 100);
+}
+
+TEST_CASE("at()")
+{
+    vector<int> v = {1, 2 ,3};
+
+    REQUIRE(v.at(1) == 2);
+
+    REQUIRE_THROWS_AS(v.at(4), out_of_range);
+}
+
+TEST_CASE("pop_back")
+{
+    vector<int> v = {1, 2, 3, 4};
+
+    REQUIRE(containerToStr(v) == "{1, 2, 3, 4}");
+    REQUIRE(v.size() == 4);
+
+    v.pop_back();
+
+    REQUIRE(containerToStr(v) == "{1, 2, 3}");
+    REQUIRE(v.size() == 3);
+}
+
+TEST_CASE("auto element : container")
+{
+    vector<int> v = {1, 2, 3, 4};
+    int t = 0;
+
+    for (auto i : v)
+    {
+        t += i;
+    }
+
+    REQUIRE(t == 10);
+}
+
+TEST_CASE("insert(it, value), insert(it, beg, end")
+{
+    vector<int> v(3, 1);
+
+    v.insert(v.begin(), 0);
+
+    REQUIRE(containerToStr(v) == "{0, 1, 1, 1}");
+    REQUIRE(v.size() == 4);
+
+    vector<int> v2(3, 2);
+
+    v.insert(v.end(), v2.begin(), v2.end());
+    REQUIRE(containerToStr(v) == "{0, 1, 1, 1, 2, 2, 2}");
+    REQUIRE(v.size() == 7);
+}
+
+TEST_CASE("erase(it), erase(beg, end)")
+{
+    vector<int> v = {1, 2, 3, 4, 5};
+
+    v.erase(v.begin());
+
+    REQUIRE(containerToStr(v) == "{2, 3, 4, 5}");
+    REQUIRE(v.size() == 4);
+
+    v.erase(v.begin(), v.end() - 1);
+
+    REQUIRE(containerToStr(v) == "{5}");
+    REQUIRE(v.size() == 1);
+}
+
+TEST_CASE("constructor vector(beg, end)")
+{
+    vector<int> v = {1, 2, 3, 4, 5, 6, 7};
+    vector<int> v2(v.begin(), v.end() - 2);
+
+    REQUIRE(containerToStr(v2) == "{1, 2, 3, 4, 5}");
+    REQUIRE(v2.size() == 5);
+}
+
+TEST_CASE("reverse")
+{
+    vector<int> v = {1, 2, 3, 4, 5};
+
+    reverse(v.begin(), v.end());
+
+    REQUIRE(containerToStr(v) == "{5, 4, 3, 2, 1}");
+}
+
+TEST_CASE("sort")
+{
+    vector<int> v = {3, 2, 4, 1, 5};
+
+    sort(v.begin(), v.end());
+
+    REQUIRE(containerToStr(v) == "{1, 2, 3, 4, 5}");
+}
+
+TEST_CASE("binary_search")
+{
+    vector<int> v(5, 10);
+
+    REQUIRE(binary_search(v.begin(), v.end(), 10) == true);
+}
+
+TEST_CASE("min_element")
+{
+    vector<int> v = {2, 4, 5, 7, 3};
+
+    REQUIRE(*min_element(v.begin(), v.end()) == 2);
+}
+
+TEST_CASE("max_element")
+{
+    vector<int> v = {2, 4, 5, 7, 3};
+
+    REQUIRE(*max_element(v.begin(), v.end()) == 7);
 }
