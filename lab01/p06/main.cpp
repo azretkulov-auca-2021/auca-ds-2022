@@ -261,3 +261,36 @@ TEST_CASE("max_element")
 
     REQUIRE(*max_element(v.begin(), v.end()) == 7);
 }
+
+class Student {
+    string mName;
+    double mGpa;
+public: 
+    Student(string)
+    // TODO
+};
+
+TEST_CASE("type iterator, operators") {
+    vector<int> v = {4, 2, 1, 5, 2};
+    vector<Student> s = {{"StudentA", 4.00}, {"StudentB", 1.6}};
+
+    SUBCASE("dereference") 
+    {
+        auto it = v.begin();
+        REQUIRE(*it == 4);
+        
+        *it = 10;
+        REQUIRE(v.front() == 10);
+    }
+
+    SUBCASE("->")
+    {
+    // TODO
+    }
+
+    SUBCASE("+")
+    {
+    // TODO
+    }
+    
+}
