@@ -7,7 +7,7 @@ using namespace std;
 
 vector<vector<int>> readShuffles();
 vector<int> createDeck();
-void applyShuffleToDeck(vector<int>& deck, const vector<int>& shuffle);
+void applyShuffleDeck(vector<int>& deck, const vector<int>& shuffle);
 void printDeck(const vector<int>& deck);
 
 int main() {
@@ -22,7 +22,7 @@ int main() {
 
         for (string line; getline(cin, line) && !line.empty();) {
             int m = stoi(line);
-            applyShuffleToDeck(deck, shuffles[m - 1]);
+            applyShuffleDeck(deck, shuffles[m - 1]);
         }
 
         if (test != 0) {
@@ -65,4 +65,13 @@ vector<vector<int>> readShuffles() {
     cin.ignore(1024, '\n');
 
     return r;
+}
+
+void applyShuffleDeck(vector<int>& deck, const vector<int>& shuffle) {
+vector<int> r(52);
+
+for (int i = 0; i < 52; i++) {
+r[i] = deck[shuffle[i] - 1];
+    }
+    deck = r;
 }
