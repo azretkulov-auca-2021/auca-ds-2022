@@ -262,19 +262,26 @@ TEST_CASE("max_element")
     REQUIRE(*max_element(v.begin(), v.end()) == 7);
 }
 
-class Student {
+class Student 
+{
     string mName;
-    double mGpa;
+    double mGPA;
+
 public: 
-    Student(string)
-    // TODO
+        Student(const string &name, double gpa)
+        : mName(name), mGPA(gpa)
+        {
+        }
+    const string &name() const{
+        return mName;
+    }
 };
 
-TEST_CASE("type iterator, operators") {
+TEST_CASE("iterator") {
     vector<int> v = {4, 2, 1, 5, 2};
     vector<Student> s = {{"StudentA", 4.00}, {"StudentB", 1.6}};
 
-    SUBCASE("dereference") 
+    SUBCASE("* dereference") 
     {
         auto it = v.begin();
         REQUIRE(*it == 4);
@@ -285,12 +292,17 @@ TEST_CASE("type iterator, operators") {
 
     SUBCASE("->")
     {
-    // TODO
+        auto it = s.begin();
+        REQUIRE((*it).name() == "StudentA");
+        REQUIRE(it->name() == "StudentA");
     }
 
     SUBCASE("+")
     {
-    // TODO
-    }
+        auto it = v.begin();
+        REQUIRE(*it == 4);
+        REQUIRE(*(it + 4) == 5);
+        it += 3;
+        REQUIRE(*it == 2);    }
     
-}
+    }
