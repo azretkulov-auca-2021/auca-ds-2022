@@ -28,9 +28,29 @@ public:
             throw std::runtime_error("value is empty");
         }
 
-        for (auto d : s)
+        int index = 0;
+
+            if (s.at(index) == '+')
+            {
+                index++;
+            }
+            else if (s.at(index) == '-')
+            {
+                mIsNegative = true;
+                index++;
+            }
+
+        for (int i = index; i < (int)s.size() - 1; i++)
         {
-            mDigits.push_back(d - '0');
+            if (isdigit(s.at(i)))
+            {
+                mDigits.push_back(s.at(i));
+            }
+            else
+            {
+                throw std::runtime_error("Incorrect format of BigInteger");
+
+            }
         }
     }
 };
@@ -41,6 +61,7 @@ inline std::ostream &operator <<(std::ostream &out, const BigInt &x)
    {
        out << "-";
    }
+
    for (auto digit : x.mDigits)
    {
        out << digit;

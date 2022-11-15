@@ -12,7 +12,7 @@ TEST_CASE("Default constructor")
 {
     BigInt x;
     ostringstream sout;
-    sout << x << " ";
+    sout << x;
     REQUIRE(sout.str() == "0");
 
     vector<BigInt> v(5);
@@ -43,9 +43,9 @@ TEST_CASE("constructor with a string")
 
     SUBCASE("negative number")
     {
-        BigInt x("-123456789123456789");
+        BigInt x("-123");
         sout << x;
-        REQUIRE(sout.str() == "-123456789123456789");
+        REQUIRE(sout.str() == "-123");
     }
 
     SUBCASE("empty string")
