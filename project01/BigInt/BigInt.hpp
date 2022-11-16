@@ -9,6 +9,7 @@
 class BigInt
 {
     friend std::ostream &operator <<(std::ostream &out, const BigInt &x);
+    friend BigInt operator+(const BigInt &x, const BigInt &y);
 
     std::vector<int> mDigits;
     bool mIsNegative;
@@ -70,3 +71,14 @@ inline std::ostream &operator <<(std::ostream &out, const BigInt &x)
    return out;
 }
 
+inline BigInt operator+(const BigInt &x, const BigInt &y)
+{
+    auto itX = x.mDigits.rbegin();
+    auto itY = y.mDigits.rbegin();
+
+    int carry = 0;
+    while (itX != x.mDigits.rend() || itY != y.mDigits.rend())
+    {
+        int s = carry;
+    }
+}
