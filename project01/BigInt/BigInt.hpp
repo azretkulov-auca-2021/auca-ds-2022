@@ -8,7 +8,7 @@
 
 class BigInt
 {
-    friend std::ostream &operator <<(std::ostream &out, const BigInt &x);
+    friend std::ostream &operator<<(std::ostream &out, const BigInt &x);
     friend BigInt operator+(const BigInt &x, const BigInt &y);
 
     std::vector<int> mDigits;
@@ -16,7 +16,7 @@ class BigInt
 
 public:
     BigInt()
-    : mIsNegative(false) 
+        : mIsNegative(false)
     {
         mDigits.push_back(0);
     }
@@ -24,24 +24,29 @@ public:
     BigInt(const std::string &s)
         : mIsNegative(false)
     {
-        if(s.empty())
+        if (s.empty())
         {
             throw std::runtime_error("value is empty");
         }
 
         int index = 0;
 
-            if (s.at(index) == '+')
-            {
-                index++;
-            }
-            else if (s.at(index) == '-')
-            {
-                mIsNegative = true;
-                index++;
-            }
+        if (s.at(index) == '+')
+        {
+            index++;
+        }
+        else if (s.at(index) == '-')
+        {
+            mIsNegative = true;
+            index++;
+        }
+        else if (isdigit(s.at(index)))
+        {
+            mDigits.push_back(s.at(index) - '0');
+            index++;
+        }
 
-        for (int i = index; i < (int)s.size() - 1; i++)
+        for (int i = index; i < (int)s.length(); i++)
         {
             if (isdigit(s.at(i)))
             {
@@ -50,35 +55,69 @@ public:
             else
             {
                 throw std::runtime_error("Incorrect format of BigInteger");
-
             }
         }
     }
+
+    static BigInt addAbsValues(const BigInt &x, const BigInt &y)
+    {
+        auto itX = x.mDigits.rbegin();
+        auto itY = y.mDigits.rbegin();
+
+        BigInt z;
+        z.mDigits.resize(std::max(x.mDigits.size(), y.mDigits.size()) + 1);
+        auto itZ = z.mDigits.rbegin();
+
+        int carry = 0;
+        while (itX != x.mDigits.rend() || itY != y.mDigits.rend())
+        {
+            int s = carry;
+            if (itX != x.mDigits.rend())
+            {
+                s += *itX;
+                ++itX;
+            }
+            if (itY != y.mDigits.rend())
+            {
+                s += *itY;
+                ++itY;
+            }
+            *itZ = s % 10;
+            carry = (s > 9) ? 1 : 0;
+            ++itZ;
+        }
+        if (carry != 0)
+        {
+            *itZ = carry;
+        }
+        if (z.mDigits.size() > 1 && z.mDigits.front() == 0)
+        {
+            z.mDigits.erase(z.mDigits.begin());
+        }
+        return z;
+    }
 };
 
-inline std::ostream &operator <<(std::ostream &out, const BigInt &x)
+inline std::ostream &operator<<(std::ostream &out, const BigInt &x)
 {
-   if (x.mIsNegative)
-   {
-       out << "-";
-   }
+    if (x.mIsNegative)
+    {
+        out << "-";
+    }
 
-   for (auto digit : x.mDigits)
-   {
-       out << digit;
-   }
+    for (auto digit : x.mDigits)
+    {
+        out << digit;
+    }
 
-   return out;
+    return out;
 }
 
 inline BigInt operator+(const BigInt &x, const BigInt &y)
 {
-    auto itX = x.mDigits.rbegin();
-    auto itY = y.mDigits.rbegin();
-
-    int carry = 0;
-    while (itX != x.mDigits.rend() || itY != y.mDigits.rend())
+    if (!x.mIsNegative && !y.mIsNegative)
     {
-        int s = carry;
+        return BigInt::addAbsValues(x, y);
     }
+    throw std::runtime_error("not implemented yet");
 }

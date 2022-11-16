@@ -8,7 +8,7 @@
 
 using namespace std;
 
-TEST_CASE("Default constructor") 
+TEST_CASE("Default constructor")
 {
     BigInt x;
     ostringstream sout;
@@ -34,7 +34,7 @@ TEST_CASE("constructor with a string")
         REQUIRE(sout.str() == "123456789123456789");
     }
 
-     SUBCASE("positive number")
+    SUBCASE("positive number")
     {
         BigInt x("+123456789123456789");
         sout << x;
@@ -64,25 +64,48 @@ TEST_CASE("constructor with a string")
 TEST_CASE("Addition")
 {
     ostringstream sout;
-    
-    SUBCASE("positive + positive")
+
+    SUBCASE("positive + positive, test #1")
     {
         BigInt x("193");
         BigInt y("59");
         sout << x + y;
         REQUIRE(sout.str() == "252");
     }
-    
+
+    SUBCASE("positive + positive, test #2")
+    {
+        BigInt x("999");
+        BigInt y("1");
+        sout << x + y;
+        REQUIRE(sout.str() == "1000");
+    }
+
+    SUBCASE("positive + positive, test #3")
+    {
+        for (int x = 0; x <= 1000; ++x)
+        {
+            for (int y = 0; y <= 1000; ++y)
+            {
+                BigInt a(to_string(x));
+                BigInt b(to_string(y));
+                sout << a + b;
+                REQUIRE(sout.str() == to_string(x + y));
+                sout.str("");
+            }
+        }
+    }
+
     SUBCASE("positive + negative")
     {
-
+        //TODO
     }
     SUBCASE("negative + positive")
     {
-
+        //TODO
     }
     SUBCASE("negative + negative")
     {
-        
+        //TODO
     }
 }
