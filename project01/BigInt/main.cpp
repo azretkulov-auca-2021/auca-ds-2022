@@ -60,3 +60,29 @@ TEST_CASE("constructor with a string")
     // "  -123  "
     // "- 123"
 }
+
+TEST_CASE("Addition")
+{
+    ostringstream sout;
+    
+    SUBCASE("positive + positive")
+    {
+        BigInt x("193");
+        BigInt y("59");
+        sout << x + y;
+        REQUIRE(sout.str() == "252");
+    }
+    
+    SUBCASE("positive + negative")
+    {
+
+    }
+    SUBCASE("negative + positive")
+    {
+
+    }
+    SUBCASE("negative + negative")
+    {
+        
+    }
+}
