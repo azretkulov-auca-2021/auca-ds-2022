@@ -50,7 +50,7 @@ public:
         {
             if (isdigit(s.at(i)))
             {
-                mDigits.push_back(s.at(i));
+                mDigits.push_back(s.at(i) - '0');
             }
             else
             {

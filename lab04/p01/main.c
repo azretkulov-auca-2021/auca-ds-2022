@@ -1,6 +1,6 @@
 #include <stdio.h>
 
-int main(void) 
+int main(void)
 {
     int x;
     int y;
@@ -8,6 +8,4 @@ int main(void)
 
     x = 1;
     p = &x;
-
-    
 }
