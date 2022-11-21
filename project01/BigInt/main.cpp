@@ -24,6 +24,14 @@ TEST_CASE("Default constructor")
     }
 }
 
+TEST_CASE("int test")
+{
+    BigInt x(123);
+    ostringstream sout;
+    sout << x;
+    REQUIRE(sout.str() == "123");
+}
+
 TEST_CASE("constructor with a string")
 {
     ostringstream sout;
@@ -52,13 +60,6 @@ TEST_CASE("constructor with a string")
     {
         REQUIRE_THROWS_AS(BigInt(""), runtime_error);
     }
-
-    // a lot of other special cases
-    // 123xyz123
-    // 123 123
-    // hello
-    // "  -123  "
-    // "- 123"
 }
 
 TEST_CASE("Addition")

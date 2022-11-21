@@ -59,6 +59,29 @@ public:
         }
     }
 
+    BigInt(const int &i)
+        : mIsNegative(false)
+    {
+        if (i == NULL)
+        {
+            throw std::runtime_error("value is empty");
+        }
+
+        if (i < 0)
+        {
+            mIsNegative = true;
+        }
+
+        int d = i;
+
+        while (d != 0)
+        {
+            mDigits.push_back(d % 10);
+            d /= 10;
+        }
+        std::reverse(mDigits.begin(), mDigits.end());
+    }
+
     static BigInt addAbsValues(const BigInt &x, const BigInt &y)
     {
         auto itX = x.mDigits.rbegin();
