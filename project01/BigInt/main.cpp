@@ -55,6 +55,31 @@ TEST_CASE("constructor with a string")
         sout << x;
         REQUIRE(sout.str() == "-123");
     }
+    SUBCASE("empty string")
+    {
+        REQUIRE_THROWS_AS(BigInt(""), runtime_error);
+    }
+    SUBCASE(" 123")
+    {
+        REQUIRE_THROWS_AS(BigInt(" 123"), runtime_error);
+        REQUIRE_THROWS_WITH(BigInt(" 123"), "Incorrect format of BigInteger");
+    }
+    SUBCASE("123-123")
+    {
+        REQUIRE_THROWS_AS(BigInt("123-123"), runtime_error);
+        REQUIRE_THROWS_WITH(BigInt("123-123"), "Incorrect format of BigInteger");
+    }
+    SUBCASE("hello")
+    {
+        REQUIRE_THROWS_AS(BigInt("hello"), runtime_error);
+        REQUIRE_THROWS_WITH(BigInt("hello"), "Incorrect format of BigInteger");
+    }
+    SUBCASE("0000213")
+    {
+        BigInt x("0000213");
+        sout << x;
+        REQUIRE(sout.str() == "213");
+    }
 
     SUBCASE("empty string")
     {
@@ -82,31 +107,31 @@ TEST_CASE("Addition")
         REQUIRE(sout.str() == "1000");
     }
 
-    SUBCASE("positive + positive, test #3")
-    {
-        for (int x = 0; x <= 1000; ++x)
-        {
-            for (int y = 0; y <= 1000; ++y)
-            {
-                BigInt a(to_string(x));
-                BigInt b(to_string(y));
-                sout << a + b;
-                REQUIRE(sout.str() == to_string(x + y));
-                sout.str("");
-            }
-        }
-    }
+    // SUBCASE("positive + positive, test #3")
+    // {
+    //     for (int x = 0; x <= 1000; ++x)
+    //     {
+    //         for (int y = 0; y <= 1000; ++y)
+    //         {
+    //             BigInt a(to_string(x));
+    //             BigInt b(to_string(y));
+    //             sout << a + b;
+    //             REQUIRE(sout.str() == to_string(x + y));
+    //             sout.str("");
+    //         }
+    //     }
+    // }
 
     SUBCASE("positive + negative")
     {
-        //TODO
+        // TODO
     }
     SUBCASE("negative + positive")
     {
-        //TODO
+        // TODO
     }
     SUBCASE("negative + negative")
     {
-        //TODO
+        // TODO
     }
 }

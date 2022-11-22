@@ -28,29 +28,28 @@ public:
         {
             throw std::runtime_error("value is empty");
         }
-
-        int index = 0;
-
-        if (s.at(index) == '+')
+        bool isSign(true);
+        bool isZero(true);
+        for (auto d : s)
         {
-            index++;
-        }
-        else if (s.at(index) == '-')
-        {
-            mIsNegative = true;
-            index++;
-        }
-        else if (isdigit(s.at(index)))
-        {
-            mDigits.push_back(s.at(index) - '0');
-            index++;
-        }
-
-        for (int i = index; i < (int)s.length(); i++)
-        {
-            if (isdigit(s.at(i)))
+            if (d == '-' && isSign)
             {
-                mDigits.push_back(s.at(i) - '0');
+                mIsNegative = true;
+                isSign = false;
+            }
+            else if (d == '+' && isSign)
+            {
+                isSign = false;
+            }
+            else if (d == '0' && isZero)
+            {
+                isZero = true;
+            }
+            else if (isdigit(d))
+            {
+                mDigits.push_back(d - '0');
+                isSign = false;
+                isZero = false;
             }
             else
             {
