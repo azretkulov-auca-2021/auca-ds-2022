@@ -24,12 +24,22 @@ TEST_CASE("Default constructor")
     }
 }
 
-TEST_CASE("int test")
+TEST_CASE("constructor with an integer")
 {
-    BigInt x(123);
     ostringstream sout;
-    sout << x;
-    REQUIRE(sout.str() == "123");
+    SUBCASE("123")
+    {
+        BigInt x(123);
+        sout << x;
+        REQUIRE(sout.str() == "123");
+    }
+
+    SUBCASE("-625")
+    {
+        BigInt x(-625);
+        sout << x;
+        REQUIRE(sout.str() == "-625");
+    }
 }
 
 TEST_CASE("constructor with a string")

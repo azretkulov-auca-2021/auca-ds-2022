@@ -10,6 +10,7 @@ class BigInt
 {
     friend std::ostream &operator<<(std::ostream &out, const BigInt &x);
     friend BigInt operator+(const BigInt &x, const BigInt &y);
+    friend bool operator==(const BigInt &x, const BigInt &y);
 
     std::vector<int> mDigits;
     bool mIsNegative;
@@ -61,24 +62,15 @@ public:
     BigInt(const int &i)
         : mIsNegative(false)
     {
-        if (i == NULL)
-        {
-            throw std::runtime_error("value is empty");
-        }
-
-        if (i < 0)
-        {
-            mIsNegative = true;
-        }
-
         int d = i;
 
-        while (d != 0)
+        if (d < 0)
         {
-            mDigits.push_back(d % 10);
-            d /= 10;
+            mIsNegative = true;
+            d = -d;
         }
-        std::reverse(mDigits.begin(), mDigits.end());
+
+        mDigits.push_back(d);
     }
 
     static BigInt addAbsValues(const BigInt &x, const BigInt &y)
@@ -142,4 +134,9 @@ inline BigInt operator+(const BigInt &x, const BigInt &y)
         return BigInt::addAbsValues(x, y);
     }
     throw std::runtime_error("not implemented yet");
+}
+
+inline bool operator==(const BigInt &x, const BigInt &y)
+{
+
 }
