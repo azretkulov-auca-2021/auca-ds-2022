@@ -138,5 +138,5 @@ inline BigInt operator+(const BigInt &x, const BigInt &y)
 
 inline bool operator==(const BigInt &x, const BigInt &y)
 {
-
+    
 }
