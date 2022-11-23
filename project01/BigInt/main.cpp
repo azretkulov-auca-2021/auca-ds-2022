@@ -27,14 +27,14 @@ TEST_CASE("Default constructor")
 TEST_CASE("constructor with an integer")
 {
     ostringstream sout;
-    SUBCASE("123")
+    SUBCASE("12345")
     {
         BigInt x(123);
         sout << x;
-        REQUIRE(sout.str() == "123");
+        REQUIRE(sout.str() == "12345");
     }
 
-    SUBCASE("-625")
+    SUBCASE("-404")
     {
         BigInt x(-625);
         sout << x;
