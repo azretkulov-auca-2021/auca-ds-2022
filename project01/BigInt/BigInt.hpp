@@ -9,6 +9,7 @@
 class BigInt
 {
     friend std::ostream &operator<<(std::ostream &out, const BigInt &x);
+    friend std::istream &operator>>(std::istream &inp, const BigInt &x);
     friend BigInt operator+(const BigInt &x, const BigInt &y);
     friend bool operator==(const BigInt &x, const BigInt &y);
     friend bool operator!=(const BigInt &x, const BigInt &y);
@@ -130,6 +131,36 @@ inline std::ostream &operator<<(std::ostream &out, const BigInt &x)
     }
 
     return out;
+}
+
+inline std::istream &operator>>(std::istream &inp, BigInt &x)
+{
+    char ch;
+    if (!(inp >> ch))
+    {
+        return inp;
+    }
+    if (!(std::isdigit(ch) || ch == '+' || ch == '-'))
+    {
+        inp.putback(ch);
+        inp.clear(std::ios_base::failbit);
+        return inp;
+    }
+
+    std::string s;
+    if (isdigit(ch))
+    {
+        s += ch;
+    }
+
+    while (inp.get(ch) && std::isdigit(ch))
+    {
+        s += ch;
+    }
+
+    x = BigInt(s);
+
+    return inp;
 }
 
 inline BigInt operator+(const BigInt &x, const BigInt &y)
