@@ -59,7 +59,7 @@ public:
             }
             else
             {
-                throw std::runtime_error("Incorrect format of BigInteger");
+                throw std::runtime_error("Invalid format of integer");
             }
         }
     }

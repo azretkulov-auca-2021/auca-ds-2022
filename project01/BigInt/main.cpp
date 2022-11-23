@@ -27,24 +27,25 @@ TEST_CASE("Default constructor")
 TEST_CASE("constructor with an integer")
 {
     ostringstream sout;
-    SUBCASE("12345")
+    SUBCASE("322")
     {
-        BigInt x(123);
+        BigInt x(322);
         sout << x;
-        REQUIRE(sout.str() == "12345");
+        REQUIRE(sout.str() == "322");
     }
 
     SUBCASE("-404")
     {
-        BigInt x(-625);
+        BigInt x(-404);
         sout << x;
-        REQUIRE(sout.str() == "-625");
+        REQUIRE(sout.str() == "-404");
     }
 }
 
 TEST_CASE("constructor with a string")
 {
     ostringstream sout;
+
     SUBCASE("positive number")
     {
         BigInt x("123456789123456789");
@@ -72,17 +73,17 @@ TEST_CASE("constructor with a string")
     SUBCASE(" 123")
     {
         REQUIRE_THROWS_AS(BigInt(" 123"), runtime_error);
-        REQUIRE_THROWS_WITH(BigInt(" 123"), "Incorrect format of BigInteger");
+        REQUIRE_THROWS_WITH(BigInt(" 123"), "Invalid format of integer");
     }
     SUBCASE("123-123")
     {
         REQUIRE_THROWS_AS(BigInt("123-123"), runtime_error);
-        REQUIRE_THROWS_WITH(BigInt("123-123"), "Incorrect format of BigInteger");
+        REQUIRE_THROWS_WITH(BigInt("123-123"), "Invalid format of integer");
     }
     SUBCASE("hello")
     {
         REQUIRE_THROWS_AS(BigInt("hello"), runtime_error);
-        REQUIRE_THROWS_WITH(BigInt("hello"), "Incorrect format of BigInteger");
+        REQUIRE_THROWS_WITH(BigInt("hello"), "Invalid format of integer");
     }
     SUBCASE("0000213")
     {
@@ -143,5 +144,58 @@ TEST_CASE("Addition")
     SUBCASE("negative + negative")
     {
         // TODO
+    }
+}
+
+TEST_CASE("operators of comparing ")
+{
+    SUBCASE(" == operator")
+    {
+        BigInt x(5);
+        BigInt y("5");
+        REQUIRE(x == y);
+    }
+
+    SUBCASE(" != operator")
+    {
+        BigInt x(5);
+        BigInt y("-4");
+        REQUIRE(x != y);
+    }
+
+    SUBCASE(" < operator")
+    {
+        BigInt x(4);
+        BigInt y("5");
+        REQUIRE(x < y);
+    }
+
+    SUBCASE(" > operator")
+    {
+        BigInt x(5);
+        BigInt y("-4");
+        REQUIRE(x > y);
+    }
+
+    SUBCASE(" >= operator")
+    {
+        BigInt x(5);
+        BigInt y("4");
+        REQUIRE(x >= y);
+
+        BigInt a("5");
+        BigInt b(5);
+        REQUIRE(a >= b);
+    }
+
+    SUBCASE(" <= operator")
+    {
+        BigInt x("4");
+        BigInt y(5);
+        REQUIRE(x <= y);
+
+        BigInt a("4");
+        BigInt b(4);
+        REQUIRE(a <= b);
     }
 }
