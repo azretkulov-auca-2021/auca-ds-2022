@@ -203,24 +203,24 @@ TEST_CASE("operators of comparing ")
 TEST_CASE("input operator")
 {
     ostringstream sout;
-    
+
     SUBCASE("correct input #1")
     {
         istringstream sinp("123");
-        int x;
+        BigInt x;
         sinp >> x;
         REQUIRE(sinp.eof());
         REQUIRE(x == 123);
     }
 
-     SUBCASE("correct input #2")
-    {
-        istringstream sinp("    123");
-        int x;
-        sinp >> x;
-        REQUIRE(sinp.good());
-        REQUIRE(x == 123);
-    }
+    //  SUBCASE("correct input #2")
+    // {
+    //     istringstream sinp("    123");
+    //     int x;
+    //     sinp >> x;
+    //     REQUIRE(sinp.good());
+    //     REQUIRE(x == 123);
+    // }
 
      SUBCASE("correct input #3")
     {
