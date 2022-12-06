@@ -216,6 +216,97 @@ void p03()
         cout << "No even numbers are found\n";
     }
 }
+
+void p07()
+{
+    vector<Student> students = {
+        {"StudentD", 2.7},
+        {"StudentA", 4.0},
+        {"StudentX", 3.2},
+        {"StudentC", 4.0},
+        {"StudentK", 4.0},
+        {"StudentE", 2.0},
+        {"StudentR", 4.0},
+        {"StudentD", 2.7},
+        {"StudentA", 4.0},
+        {"StudentX", 3.2},
+        {"StudentC", 4.0},
+        {"StudentK", 4.0},
+        {"StudentE", 2.0},
+        {"StudentR", 4.0},
+        {"StudentR", 4.0},
+        {"StudentD", 2.7},
+        {"StudentA", 4.0},
+        {"StudentX", 3.2},
+        {"StudentC", 4.0},
+        {"StudentK", 4.0},
+        {"StudentE", 2.0},
+        {"StudentR", 4.0}};
+
+    cout << "--- regular sort by name ---" << endl;
+
+    sort(begin(students), end(students),
+         [](const Student &s1, const Student &s2)
+         { return s1.mName < s2.mName; });
+
+    for (const auto &s : students)
+    {
+        cout << s.mName << ", " << s.mGpa << endl;
+    }
+
+    cout << "--- regular sort by gpa ---" << endl;
+
+    sort(begin(students), end(students),
+         [](const Student &s1, const Student &s2)
+         { return s1.mGpa < s2.mGpa; });
+
+    for (const auto &s : students)
+    {
+        cout << s.mName << ", " << s.mGpa << endl;
+    }
+
+    cout << "--- stable sort by name ---" << endl;
+
+    stable_sort(begin(students), end(students),
+                [](const Student &s1, const Student &s2)
+                { return s1.mName < s2.mName; });
+
+    for (const auto &s : students)
+    {
+        cout << s.mName << ", " << s.mGpa << endl;
+    }
+
+    cout << "--- stable sort by gpa ---" << endl;
+
+    stable_sort(begin(students), end(students),
+                [](const Student &s1, const Student &s2)
+                { return s1.mGpa < s2.mGpa; });
+
+    for (const auto &s : students)
+    {
+        cout << s.mName << ", " << s.mGpa << endl;
+    }
+}
+
+void p08()
+{
+    vector<pair<string, double>> students;
+    string name;
+    double gpa;
+    while (cin >> name >> gpa)
+    {
+        students.emplace_back(name, gpa);
+    }
+
+    sort(begin(students), end(students));
+
+    cout << "- - -" << endl;
+    cout << fixed << showpoint << setprecision(2);
+    for (const auto &[studName, studGpa] : students)
+    {
+        cout << studName << ", " << studGpa << endl;
+    }
+}
 int main()
 {
     // p0101();
@@ -224,6 +315,8 @@ int main()
     // p0201();
     // p0202();
 
-    p03();
+    // p03();
     // p06();
+    // p07();
+    p08();
 }
