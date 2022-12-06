@@ -37,9 +37,8 @@ int main()
 
     int N;
     vector <int> numbers;
-    SortByModulo s;
 
-    while (cin >> N >> M)
+    while (cin >> N >> M, cout << N << " " << M << "\n", N)
     {
         for (int i = 1; i <= N; i++)
         {
@@ -49,5 +48,12 @@ int main()
         }
 
         sort(begin(numbers), end(numbers), SortByModulo());
+
+        for (int i = 0; i < N; i++)
+        {
+            cout << numbers[i] << endl;
+        }
+
+        numbers = vector<int>();
     }
 }
