@@ -6,7 +6,7 @@
 #include <utility>
 #include <vector>
 
-// #include "../../"
+#include "../../au/algol.hpp"
 
 using namespace std;
 
@@ -22,11 +22,162 @@ struct Student
 
 void p0101()
 {
-    int a[] = {3, 1, 20, 4, 7, 0, 5};
+    vector<int> n = {3, 20, 100, -5, 4};
+    {
+        int a[] = {3, 1, 20, 4, 7, 0, 5};
+        for (auto e : n)
+        {
+            auto it = find(begin(a), end(a), e);
+            if (it != end(a))
+            {
+                cout << "found. Its index is " << it - begin(a) << "\n";
+            }
+            else
+            {
+                cout << e << " not found\n";
+            }
+        }
+    }
+
+    {
+        vector<int> a = {3, 1, 20, 4, 7, 0, 5};
+        for (auto e : n)
+        {
+            auto it = find(begin(a), end(a), e);
+            if (it != end(a))
+            {
+                cout << "found. Its index is " << it - begin(a) << "\n";
+            }
+            else
+            {
+                cout << e << " not found\n";
+            }
+        }
+    }
 }
 
+bool isEven(int n)
+{
+    return n % 2 == 0;
+}
+
+// functor, function object
+// struct IsEven
+// {
+//     bool operator()(int n) const
+//     {
+//         return n % 2 == 0;
+//     }
+// };
+
+void p0102()
+{
+    vector<int> n = {3, 20, 100, -5, 4};
+    {
+        int a[] = {3, 1, 20, 4, 7, 0, 5};
+        for (auto e : n)
+        {
+            auto it = auFind(begin(a), end(a), e);
+            if (it != end(a))
+            {
+                cout << "found. Its index is " << it - begin(a) << "\n";
+            }
+            else
+            {
+                cout << e << " not found\n";
+            }
+        }
+    }
+
+    {
+        vector<int> a = {3, 1, 20, 4, 7, 0, 5};
+        for (auto e : n)
+        {
+            auto it = auFind(begin(a), end(a), e);
+            if (it != end(a))
+            {
+                cout << e << "found. Its index is " << it - begin(a) << "\n";
+            }
+            else
+            {
+                cout << e << " not found\n";
+            }
+        }
+    }
+}
+
+// void p0201()
+// {
+//     vector<int> a = {3, 1, 20, 4, 7, 0, 5};
+
+//     // IsEven pred;
+//     // cout << boolalpha;
+//     // cout << pred(5) << endl;
+//     // cout << string(40, '-') << endl;
+
+//     auto it = find_if(begin(a), end(a), IsEven());
+//     if (it != end(a))
+//     {
+//         cout << *it << " found. Its index is " << it - begin(a) << "\n";
+//     }
+//     else
+//     {
+//         cout <<  "No even numbers are found\n";
+//     }
+// }
+
+void p0202()
+{
+    vector<int> a = {3, 1, 20, 4, 7, 0, 5};
+
+    auto it = find_if(begin(a), end(a),
+                      [](int n) // lambda expression
+                      { return n % 2 == 0; });
+    if (it != end(a))
+    {
+        cout << *it << " found. Its index is " << it - begin(a) << "\n";
+    }
+    else
+    {
+        cout << "No even numbers are found\n";
+    }
+}
+
+void p06()
+{
+    vector<Student> students;
+    string name;
+    double gpa;
+    while (cin >> name >> gpa)
+    {
+        students.emplace_back(name, gpa);
+    }
+
+    sort(begin(students), end(students),
+        [](const Student &s1, const Student &s2)
+        { return s1.mName < s2.mName; });
+    for (const auto &s : students)
+    {
+        cout << s.mName << ", " << s.mGpa << endl;
+    }
+
+    sort(begin(students), end(students),
+        [](const Student &s1, const Student &s2)
+        { return s1.mGpa < s2.mGpa; });
+
+        cout << fixed << 
+    for (const auto &s : students)
+    {
+        cout << s.mName << ", " << s.mGpa << endl;
+    }
+}
 int main()
 {
-    p0101();
+    // p0101();
     // p0102();
+
+    // p0201();
+    // p0202();
+
+    p06();
 }
