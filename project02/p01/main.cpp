@@ -14,15 +14,15 @@ struct SortByModulo
         {
             return a % M < b % M;
         }
-        if (a % M != 0)
+        if (a % 2 != 0)
         {
-            if (b % M != 0)
+            if (b % 2 != 0)
             {
                 return a > b;
             }
             return true;
         }
-        if (b % M != 0)
+        if (b % 2 != 0)
         {
             return false;
         }
