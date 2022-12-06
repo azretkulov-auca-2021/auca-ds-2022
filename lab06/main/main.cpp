@@ -5,6 +5,7 @@
 #include <tuple>
 #include <utility>
 #include <vector>
+#include <iomanip>
 
 #include "../../au/algol.hpp"
 
@@ -62,13 +63,13 @@ bool isEven(int n)
 }
 
 // functor, function object
-// struct IsEven
-// {
-//     bool operator()(int n) const
-//     {
-//         return n % 2 == 0;
-//     }
-// };
+struct IsEven
+{
+    bool operator()(int n) const
+    {
+        return n % 2 == 0;
+    }
+};
 
 void p0102()
 {
@@ -154,21 +155,65 @@ void p06()
     }
 
     sort(begin(students), end(students),
-        [](const Student &s1, const Student &s2)
-        { return s1.mName < s2.mName; });
+         [](const Student &s1, const Student &s2)
+         { return s1.mName < s2.mName; });
+
+    cout << "- - -" << endl;
     for (const auto &s : students)
     {
         cout << s.mName << ", " << s.mGpa << endl;
     }
 
     sort(begin(students), end(students),
-        [](const Student &s1, const Student &s2)
-        { return s1.mGpa < s2.mGpa; });
+         [](const Student &s1, const Student &s2)
+         { return s1.mGpa > s2.mGpa; });
 
-        cout << fixed << 
+    cout << "- - -" << endl;
     for (const auto &s : students)
     {
         cout << s.mName << ", " << s.mGpa << endl;
+    }
+}
+
+struct GreaterThan
+{
+    int mX;
+    GreaterThan(int x) : mX(x){};
+    bool operator()(int n) const
+    {
+        return n > mX;
+    }
+};
+
+void p03()
+{
+    vector<int> a = {3, 1, 20, 4, 7, 0, 5};
+
+    cout << "Enter x: ";
+    int x;
+    cin >> x;
+
+    auto it = find_if(begin(a), end(a),
+                      [x](int n)
+                      { return n > x; });
+    if (it != end(a))
+    {
+        cout << *it << " found. Its index is " << it - begin(a) << "\n";
+    }
+    else
+    {
+        cout << "No even numbers are found\n";
+    }
+
+    // GreaterThan pred(x);
+    auto it2 = find_if(begin(a), end(a), GreaterThan(x));
+    if (it2 != end(a))
+    {
+        cout << *it2 << " found. Its index is " << it2 - begin(a) << "\n";
+    }
+    else
+    {
+        cout << "No even numbers are found\n";
     }
 }
 int main()
@@ -179,5 +224,6 @@ int main()
     // p0201();
     // p0202();
 
-    p06();
+    p03();
+    // p06();
 }
