@@ -144,6 +144,118 @@ void p0202()
     }
 }
 
+void p0401()
+{
+    vector<int> v;
+    for (int x; cin >> x;)
+    {
+        v.push_back(x);
+    }
+
+    auto p = min_element(begin(v), end(v));
+    if (p != end(v))
+    {
+        cout << "Min value: " << *p << endl;
+    }
+    else
+    {
+        cout << "Not found" << endl;
+    }
+}
+
+void p0402()
+{
+    vector<int> v;
+    for (int x; cin >> x;)
+    {
+        v.push_back(x);
+    }
+
+    auto p = auMinElement(begin(v), end(v));
+    if (p != end(v))
+    {
+        cout << "Min value: " << *p << endl;
+    }
+    else
+    {
+        cout << "Not found" << endl;
+    }
+}
+
+void p0501()
+{
+    vector<Student> students;
+    string name;
+    double gpa;
+    while (cin >> name >> gpa)
+    {
+        students.emplace_back(name, gpa);
+    }
+    auto iterToMinGpa = min_element(begin(students), end(students),
+                                    [](const Student &s1, const Student &s2)
+                                    { return s1.mGpa < s2.mGpa; });
+
+    if (iterToMinGpa != end(students))
+    {
+        cout << "with min gpa: " << iterToMinGpa->mName << " " << iterToMinGpa->mGpa << endl;
+    }
+    else
+    {
+        cout << "Not found" << endl;
+    }
+
+    // - - - - - - - - - COMPARE BY NAMES - - - - - - - - -
+    auto iterToMinName = min_element(begin(students), end(students),
+                                     [](const Student &s1, const Student &s2)
+                                     { return s1.mName < s2.mName; });
+
+    if (iterToMinName != end(students))
+    {
+        cout << "with min name: " << iterToMinName->mName << " " << iterToMinName->mGpa << endl;
+    }
+    else
+    {
+        cout << "Not found" << endl;
+    }
+}
+
+void p0502()
+{
+    vector<Student> students;
+    string name;
+    double gpa;
+    while (cin >> name >> gpa)
+    {
+        students.emplace_back(name, gpa);
+    }
+    auto iterToMinGpa = auMinElement(begin(students), end(students),
+                                    [](const Student &s1, const Student &s2)
+                                    { return s1.mGpa < s2.mGpa; });
+
+    if (iterToMinGpa != end(students))
+    {
+        cout << "with min gpa: " << iterToMinGpa->mName << " " << iterToMinGpa->mGpa << endl;
+    }
+    else
+    {
+        cout << "Not found" << endl;
+    }
+
+    // - - - - - - - - - COMPARE BY NAMES - - - - - - - - -
+    auto iterToMinName = auMinElement(begin(students), end(students),
+                                     [](const Student &s1, const Student &s2)
+                                     { return s1.mName < s2.mName; });
+
+    if (iterToMinName != end(students))
+    {
+        cout << "with min name: " << iterToMinName->mName << " " << iterToMinName->mGpa << endl;
+    }
+    else
+    {
+        cout << "Not found" << endl;
+    }
+} 
+
 void p06()
 {
     vector<Student> students;
@@ -384,22 +496,24 @@ void p12()
     }
 }
 
-// - - - - - - - -- - - - - -
+// - - - - - - - - - - - - - -
 
 int main()
 {
     // p0101();
     // p0102();
-
     // p0201();
     // p0202();
-
     // p03();
+    // p0401();
+    // p0402();
+    // p0501();
+    p0502();
     // p06();
     // p07();
     // p08();
     // p09();
     // p1001();
     // p11();
-    p12();
+    // p12();
 }

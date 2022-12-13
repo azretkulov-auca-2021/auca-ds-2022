@@ -59,3 +59,45 @@ ForwardIter auFindIf(ForwardIter beg, ForwardIter end, UnaryPredicate pred)
 
     return beg;
 }
+
+template <typename Iter>
+Iter auMinElement(Iter beg, Iter end)
+{
+    if (beg == end)
+    {
+        return end;
+    }
+
+    Iter res = beg++;
+    while (beg != end)
+    {
+        if (*beg < *res)
+        {
+            res = beg;
+        }
+        ++beg;
+    }
+
+    return res;
+}
+
+template <typename Iter, typename Predicate>
+Iter auMinElement(Iter beg, Iter end, Predicate p)
+{
+    if (beg == end)
+    {
+        return end;
+    }
+
+    Iter res = beg++;
+    while (beg != end)
+    {
+        if (p(*beg, *res))
+        {
+            res = beg;
+        }
+        ++beg;
+    }
+
+    return res;
+}
