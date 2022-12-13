@@ -101,3 +101,29 @@ Iter auMinElement(Iter beg, Iter end, Predicate p)
 
     return res;
 }
+
+template <typename Iter, typename T>
+Iter auLowerBound(Iter beg, Iter end, const T &k)
+{
+    while (beg != end)
+    {
+        auto mid = beg + (end - beg) / 2;
+        if (*mid < k)
+        {
+            beg = ++mid;
+        }
+        else
+        {
+            end = mid;
+        }
+    }
+
+    return beg;
+}
+
+template <typename Iter, typename T>
+bool auBinarySearch(Iter beg, Iter end, const T &k)
+{
+    auto iter = auLowerBound(beg, end, k);
+    return iter != end && *iter == k;
+}
