@@ -1,11 +1,11 @@
 #include <algorithm>
+#include <iomanip>
 #include <iostream>
 #include <iterator>
 #include <string>
 #include <tuple>
 #include <utility>
 #include <vector>
-#include <iomanip>
 
 #include "../../au/algol.hpp"
 
@@ -302,11 +302,90 @@ void p08()
 
     cout << "- - -" << endl;
     cout << fixed << showpoint << setprecision(2);
-    for (const auto &[studName, studGpa] : students)
+    for (const auto &p : students)
     {
-        cout << studName << ", " << studGpa << endl;
+        cout << p.first << ", " << p.second << endl;
     }
 }
+
+// void p09()
+// {
+//     vector<tuple<string, int, double>> employes;
+//     string name;
+//     int age;
+//     double salary;
+//     while (cin >> name >> age >> salary)
+//     {
+//         employes.emplace_back(name, age, salary);
+//     }
+
+//     sort(begin(employes), end(employes),
+//          [](const auto &e1, const auto &e2)
+//          { return get<1>(e1) < get<1>(e2); });
+
+//     cout << "---" << endl;
+//     cout << fixed << showpoint << setprecision(2);
+//     for (const auto &e : employes)
+//     {
+//         cout << get<0>(e) << ", " << get<1>(e) << ", " << get<2>(e) << endl;
+//     }
+// }
+
+void p1001()
+{
+    vector<int> v = {0, 4, 5, 10, 12, 20, 25, 40};
+
+    for (int x; cin >> x;)
+    {
+        cout << (binary_search(begin(v), end(v), x) ? "Yes\n" : "No\n");
+    }
+}
+
+void p11()
+{
+    vector<int> v = {0, 4, 5, 10, 12, 20, 25, 40};
+
+    for (int x; cin >> x;)
+    {
+        auto it = lower_bound(begin(v), end(v), x);
+        // no elements equal or greater than x
+        if (it == end(v))
+        {
+            cout << "no elements equal or greater than " << x << endl;
+        }
+        // there is an element equal to x
+        else if (*it == x)
+        {
+            cout << "first element equal to " << x << " has index: " << it - begin(v) << endl;
+        }
+        else
+        {
+            cout << "there are no elements equal to " << x << endl;
+            cout << "first element greater than " << x << " has index: " << it - begin(v) << endl;
+        }
+    }
+}
+
+void p12()
+{
+    vector<int> v = {0, 0, 4, 5, 10, 10, 10, 12, 20, 25, 35, 25, 25, 40};
+
+    for (int x; cin >> x;)
+    {
+        auto p = equal_range(begin(v), end(v), x);
+        if (p.first == p.second)
+        {
+            cout << "there are no elements equal to " << x << endl;
+        }
+        else
+        {
+            cout << "numbers of elements equal to " << x << " is: " << p.second - p.first << endl;
+        }
+    }
+}
+
+// - - - - - - - -- - - - - -
+
 int main()
 {
     // p0101();
@@ -318,5 +397,9 @@ int main()
     // p03();
     // p06();
     // p07();
-    p08();
+    // p08();
+    // p09();
+    // p1001();
+    // p11();
+    p12();
 }
