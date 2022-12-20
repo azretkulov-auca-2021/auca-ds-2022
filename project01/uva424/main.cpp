@@ -130,6 +130,7 @@ inline std::ostream &operator<<(std::ostream &out, const BigInt &x)
 
 inline std::istream &operator>>(std::istream &inp, BigInt &x)
 {
+    //   а нужно ли эти чар?
     char ch;
     if (!(inp >> ch))
     {
