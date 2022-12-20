@@ -33,35 +33,33 @@ public:
     {
         if (s.empty())
         {
-            throw std::runtime_error("value is empty");
+            throw std::runtime_error("BigInteger value cannot be empty");
         }
-        bool isSign(true);
-        bool isZero(true);
-        for (auto d : s)
+
+        int i = 0;
+        if (s[i] == '-' || s[i] == '+')
         {
-            if (d == '-' && isSign)
+            if (s[i] == '-')
             {
                 mIsNegative = true;
-                isSign = false;
             }
-            else if (d == '+' && isSign)
+            ++i;
+        }
+
+        while (i < (int)s.size())
+        {
+            if (!isdigit(s[i]))
             {
-                isSign = false;
+                throw std::runtime_error("Incorrect format of BigInteger");
             }
-            else if (d == '0' && isZero)
-            {
-                isZero = true;
-            }
-            else if (isdigit(d))
-            {
-                mDigits.push_back(d - '0');
-                isSign = false;
-                isZero = false;
-            }
-            else
-            {
-                throw std::runtime_error("Invalid format of integer");
-            }
+
+            mDigits.push_back(s[i] - '0');
+            ++i;
+        }
+
+        if (mDigits.empty())
+        {
+            throw std::runtime_error("Incorrect format of BigInteger");
         }
     }
 
@@ -140,22 +138,31 @@ inline std::istream &operator>>(std::istream &inp, BigInt &x)
     {
         return inp;
     }
-    if (!(std::isdigit(ch) || ch == '+' || ch == '-'))
+
+    if (!(isdigit(ch) || ch == '+' || ch == '-'))
     {
         inp.putback(ch);
-        inp.clear(std::ios_base::failbit);
+        inp.setstate(std::ios_base::failbit); 
         return inp;
     }
 
     std::string s;
-    if (isdigit(ch))
+    s += ch;
+
+    while (inp.get(ch) && isdigit(ch))
     {
         s += ch;
     }
 
-    while (inp.get(ch) && std::isdigit(ch))
+    if (inp)
     {
-        s += ch;
+        inp.putback(ch);
+    }
+
+    if (s.size() == 1 && (s[0] == '+' || s[0] == '-'))
+    {
+        inp.setstate(std::ios_base::failbit);
+        return inp;
     }
 
     x = BigInt(s);

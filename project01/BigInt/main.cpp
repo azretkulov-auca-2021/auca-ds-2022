@@ -73,23 +73,17 @@ TEST_CASE("constructor with a string")
     SUBCASE(" 123")
     {
         REQUIRE_THROWS_AS(BigInt(" 123"), runtime_error);
-        REQUIRE_THROWS_WITH(BigInt(" 123"), "Invalid format of integer");
+        REQUIRE_THROWS_WITH(BigInt(" 123"), "Incorrect format of BigInteger");
     }
     SUBCASE("123-123")
     {
         REQUIRE_THROWS_AS(BigInt("123-123"), runtime_error);
-        REQUIRE_THROWS_WITH(BigInt("123-123"), "Invalid format of integer");
+        REQUIRE_THROWS_WITH(BigInt("123-123"), "Incorrect format of BigInteger");
     }
     SUBCASE("hello")
     {
         REQUIRE_THROWS_AS(BigInt("hello"), runtime_error);
-        REQUIRE_THROWS_WITH(BigInt("hello"), "Invalid format of integer");
-    }
-    SUBCASE("0000213")
-    {
-        BigInt x("0000213");
-        sout << x;
-        REQUIRE(sout.str() == "213");
+        REQUIRE_THROWS_WITH(BigInt("hello"), "Incorrect format of BigInteger");
     }
 
     SUBCASE("empty string")
@@ -204,28 +198,28 @@ TEST_CASE("input operator")
 {
     ostringstream sout;
 
-    SUBCASE("correct input #1")
-    {
-        istringstream sinp("123");
-        BigInt x;
-        sinp >> x;
-        REQUIRE(sinp.eof());
-        REQUIRE(x == 123);
-    }
-
-    //  SUBCASE("correct input #2")
+    // SUBCASE("correct input #1")
     // {
-    //     istringstream sinp("    123");
-    //     int x;
+    //     istringstream sinp("123");
+    //     BigInt x;
     //     sinp >> x;
-    //     REQUIRE(sinp.good());
+    //     REQUIRE(sinp.eof());
     //     REQUIRE(x == 123);
     // }
+
+     SUBCASE("correct input #2")
+    {
+        istringstream sinp("    123");
+        BigInt x;
+        sinp >> x;
+        REQUIRE(sinp.good());
+        REQUIRE(x == 123);
+    }
 
      SUBCASE("correct input #3")
     {
         istringstream sinp("123u123");
-        int x;
+        BigInt x;
         sinp >> x;
         REQUIRE(sinp.good());
         REQUIRE(x == 123);
@@ -237,7 +231,7 @@ TEST_CASE("input operator")
      SUBCASE("correct input #4")
     {
         istringstream sinp("    -123");
-        int x;
+        BigInt x;
         sinp >> x;
         REQUIRE(sinp.eof());
         REQUIRE(x == -123);
@@ -246,7 +240,7 @@ TEST_CASE("input operator")
      SUBCASE("correct input #5")
     {
         istringstream sinp("   +123");
-        int x;
+        BigInt x;
         sinp >> x;
         REQUIRE(sinp.eof());
         REQUIRE(x == 123);
@@ -255,7 +249,7 @@ TEST_CASE("input operator")
      SUBCASE("incorrect input #1")
     {
         istringstream sinp("+ 123");
-        int x;
+        BigInt x;
         sinp >> x;
         REQUIRE(sinp.fail());
         REQUIRE(x == 0);
@@ -264,7 +258,7 @@ TEST_CASE("input operator")
     SUBCASE("incorrect input #2")
     {
         istringstream sinp("++123");
-        int x;
+        BigInt x;
         sinp >> x;
         REQUIRE(sinp.fail());
         REQUIRE(x == 0);
@@ -285,7 +279,7 @@ TEST_CASE("input operator")
     SUBCASE("incorrect input #4")
     {
         istringstream sinp("");
-        int x;
+        BigInt x;
         sinp >> x;
         REQUIRE(sinp.fail());
         REQUIRE(sinp.eof());
