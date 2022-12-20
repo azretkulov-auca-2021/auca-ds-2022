@@ -3,6 +3,7 @@
 
 #include <sstream>
 #include <string>
+#include <stdexcept>
 
 #include "BigInt.hpp"
 
@@ -24,36 +25,17 @@ TEST_CASE("Default constructor")
     }
 }
 
-TEST_CASE("constructor with an integer")
+TEST_CASE("Constructor with a string")
 {
     ostringstream sout;
-    SUBCASE("322")
-    {
-        BigInt x(322);
-        sout << x;
-        REQUIRE(sout.str() == "322");
-    }
-
-    SUBCASE("-404")
-    {
-        BigInt x(-404);
-        sout << x;
-        REQUIRE(sout.str() == "-404");
-    }
-}
-
-TEST_CASE("constructor with a string")
-{
-    ostringstream sout;
-
-    SUBCASE("positive number")
+    SUBCASE("positive number, test #1")
     {
         BigInt x("123456789123456789");
         sout << x;
         REQUIRE(sout.str() == "123456789123456789");
     }
 
-    SUBCASE("positive number")
+    SUBCASE("positive number, test #2")
     {
         BigInt x("+123456789123456789");
         sout << x;
@@ -66,29 +48,107 @@ TEST_CASE("constructor with a string")
         sout << x;
         REQUIRE(sout.str() == "-123");
     }
+
     SUBCASE("empty string")
     {
         REQUIRE_THROWS_AS(BigInt(""), runtime_error);
     }
+
     SUBCASE(" 123")
     {
         REQUIRE_THROWS_AS(BigInt(" 123"), runtime_error);
         REQUIRE_THROWS_WITH(BigInt(" 123"), "Incorrect format of BigInteger");
     }
+
     SUBCASE("123-123")
     {
         REQUIRE_THROWS_AS(BigInt("123-123"), runtime_error);
         REQUIRE_THROWS_WITH(BigInt("123-123"), "Incorrect format of BigInteger");
     }
+
     SUBCASE("hello")
     {
         REQUIRE_THROWS_AS(BigInt("hello"), runtime_error);
         REQUIRE_THROWS_WITH(BigInt("hello"), "Incorrect format of BigInteger");
     }
 
-    SUBCASE("empty string")
+    // SUBCASE("0000213")
+    // {
+    //     BigInt x("0000213");
+    //     sout << x;
+    //     REQUIRE(sout.str() == "213");
+    // }
+}
+
+TEST_CASE("Constructor with an integer")
+{
+    ostringstream sout;
+
+    SUBCASE("12345")
     {
-        REQUIRE_THROWS_AS(BigInt(""), runtime_error);
+        BigInt x(12345);
+        sout << x;
+        REQUIRE(sout.str() == "12345");
+    }
+
+    SUBCASE("-625")
+    {
+        BigInt x(-625);
+        sout << x;
+        REQUIRE(sout.str() == "-625");
+    }
+}
+
+TEST_CASE("Comparison operators")
+{
+    SUBCASE("==operator")
+    {
+        BigInt x(5);
+        BigInt y("5");
+        REQUIRE(x == y);
+    }
+
+    SUBCASE("!=operator")
+    {
+        BigInt x(3);
+        BigInt y("7");
+        REQUIRE(x != y);
+    }
+
+    SUBCASE("< operator")
+    {
+        BigInt x(-6);
+        BigInt y("-4");
+        REQUIRE(x < y);
+    }
+
+    SUBCASE("> operator")
+    {
+        BigInt x(-3);
+        BigInt y("-5");
+        REQUIRE(x > y);
+    }
+
+    SUBCASE(">= operator")
+    {
+        BigInt x(7);
+        BigInt y("7");
+        REQUIRE(x >= y);
+
+        BigInt a(9);
+        BigInt b("8");
+        REQUIRE(a >= b);
+    }
+
+    SUBCASE("<= operator")
+    {
+        BigInt x(4);
+        BigInt y("4");
+        REQUIRE(x <= y);
+
+        BigInt a(5);
+        BigInt b("6");
+        REQUIRE(a <= b);
     }
 }
 
@@ -127,70 +187,154 @@ TEST_CASE("Addition")
     //     }
     // }
 
-    SUBCASE("positive + negative")
-    {
-        // TODO
-    }
-    SUBCASE("negative + positive")
-    {
-        // TODO
-    }
     SUBCASE("negative + negative")
     {
-        // TODO
+        BigInt x("-99");
+        BigInt y("-1");
+        sout << x + y;
+        REQUIRE(sout.str() == "-100");
+    }
+
+    SUBCASE("negative + positive, test #1")
+    {
+        BigInt x("-54");
+        BigInt y("25");
+        sout << x + y;
+        REQUIRE(sout.str() == "-29");
+    }
+
+    SUBCASE("negative + positive, test #2")
+    {
+        BigInt x("-26");
+        BigInt y("30");
+        sout << x + y;
+        REQUIRE(sout.str() == "4");
+    }
+
+    SUBCASE("negative + positive, test #3")
+    {
+        BigInt x("-30");
+        BigInt y("30");
+        sout << x + y;
+        REQUIRE(sout.str() == "0");
+    }
+
+    SUBCASE("unary +operator")
+    {
+        BigInt x("-6");
+        BigInt y = +x;
+        sout << y;
+        REQUIRE(sout.str() == "-6");
+    }
+
+    SUBCASE("operator +=")
+    {
+        BigInt x("19");
+        BigInt y("11");
+        x += y;
+        sout << x;
+        REQUIRE(sout.str() == "30");
+    }
+
+    SUBCASE("postfix ++")
+    {
+        BigInt x("19");
+        x++;
+        sout << x;
+        REQUIRE(sout.str() == "19");
+    }
+
+    SUBCASE("++ prefix")
+    {
+        BigInt x("19");
+        ++x;
+        sout << x;
+        REQUIRE(sout.str() == "20");
     }
 }
 
-TEST_CASE("operators of comparing ")
+TEST_CASE("Substraction")
 {
-    SUBCASE(" == operator")
+    ostringstream sout;
+    SUBCASE("positive - positive, test #1")
     {
-        BigInt x(5);
-        BigInt y("5");
-        REQUIRE(x == y);
+        BigInt x("30");
+        BigInt y("30");
+        sout << x - y;
+        REQUIRE(sout.str() == "0");
     }
 
-    SUBCASE(" != operator")
+    SUBCASE("positive - positive, test #2")
     {
-        BigInt x(5);
-        BigInt y("-4");
-        REQUIRE(x != y);
+        BigInt x("10");
+        BigInt y("11");
+        sout << x - y;
+        REQUIRE(sout.str() == "-1");
     }
 
-    SUBCASE(" < operator")
+    SUBCASE("negative - negative, test #1")
     {
-        BigInt x(4);
-        BigInt y("5");
-        REQUIRE(x < y);
+        BigInt x("-30");
+        BigInt y("-30");
+        sout << x - y;
+        REQUIRE(sout.str() == "0");
     }
 
-    SUBCASE(" > operator")
+    SUBCASE("negative - negative, test #2")
     {
-        BigInt x(5);
-        BigInt y("-4");
-        REQUIRE(x > y);
+        BigInt x("-30");
+        BigInt y("-37");
+        sout << x - y;
+        REQUIRE(sout.str() == "7");
     }
 
-    SUBCASE(" >= operator")
+    SUBCASE("negative - positive")
     {
-        BigInt x(5);
-        BigInt y("4");
-        REQUIRE(x >= y);
-
-        BigInt a("5");
-        BigInt b(5);
-        REQUIRE(a >= b);
+        BigInt x("-30");
+        BigInt y("24");
+        sout << x - y;
+        REQUIRE(sout.str() == "-54");
     }
 
-    SUBCASE(" <= operator")
+    SUBCASE("positive - negative")
     {
-        BigInt x("4");
-        BigInt y(5);
-        REQUIRE(x <= y);
+        BigInt x("30");
+        BigInt y("-54");
+        sout << x - y;
+        REQUIRE(sout.str() == "84");
+    }
 
-        BigInt a("4");
-        BigInt b(4);
-        REQUIRE(a <= b);
+    SUBCASE("unary -operator")
+    {
+        BigInt x("-6");
+        BigInt y = -x;
+        sout << y;
+        REQUIRE(sout.str() == "6");
+    }
+
+    SUBCASE("operator -=")
+    {
+        BigInt x("19");
+        BigInt y("9");
+        x -= y;
+        sout << x;
+        REQUIRE(sout.str() == "10");
+    }
+
+    SUBCASE("postfix --")
+    {
+        BigInt x("19");
+        x--;
+        sout << x;
+        REQUIRE(sout.str() == "19");
+    }
+
+    SUBCASE("-- prefix")
+    {
+        BigInt x("19");
+        --x;
+        sout << x;
+        REQUIRE(sout.str() == "18");
     }
 }
 
@@ -198,25 +342,25 @@ TEST_CASE("input operator")
 {
     ostringstream sout;
 
-    // SUBCASE("correct input #1")
-    // {
-    //     istringstream sinp("123");
-    //     BigInt x;
-    //     sinp >> x;
-    //     REQUIRE(sinp.eof());
-    //     REQUIRE(x == 123);
-    // }
-
-     SUBCASE("correct input #2")
+    SUBCASE("correct inp #1")
     {
-        istringstream sinp("    123");
+        istringstream sinp("123");
+        BigInt x;
+        sinp >> x;
+        REQUIRE(sinp.eof());
+        REQUIRE(x == 123);
+    }
+
+    SUBCASE("correct inp #2")
+    {
+        istringstream sinp("   123 ");
         BigInt x;
         sinp >> x;
         REQUIRE(sinp.good());
         REQUIRE(x == 123);
     }
 
-     SUBCASE("correct input #3")
+    SUBCASE("correct inp #3")
     {
         istringstream sinp("123u123");
         BigInt x;
@@ -228,16 +372,16 @@ TEST_CASE("input operator")
         REQUIRE(ch == 'u');
     }
 
-     SUBCASE("correct input #4")
+    SUBCASE("correct inp #4")
     {
-        istringstream sinp("    -123");
+        istringstream sinp("   -123");
         BigInt x;
         sinp >> x;
         REQUIRE(sinp.eof());
         REQUIRE(x == -123);
     }
 
-     SUBCASE("correct input #5")
+    SUBCASE("correct inp #5")
     {
         istringstream sinp("   +123");
         BigInt x;
@@ -246,7 +390,7 @@ TEST_CASE("input operator")
         REQUIRE(x == 123);
     }
 
-     SUBCASE("incorrect input #1")
+    SUBCASE("incorrect inp #1")
     {
         istringstream sinp("+ 123");
         BigInt x;
@@ -255,7 +399,7 @@ TEST_CASE("input operator")
         REQUIRE(x == 0);
     }
 
-    SUBCASE("incorrect input #2")
+    SUBCASE("incorrect inp #2")
     {
         istringstream sinp("++123");
         BigInt x;
@@ -264,19 +408,20 @@ TEST_CASE("input operator")
         REQUIRE(x == 0);
     }
 
-    SUBCASE("incorrect input #3")
+    SUBCASE("incorrect inp #3")
     {
         istringstream sinp("hello");
         BigInt x;
         char ch;
-        sinp >> x; 
+        sinp >> x;
         REQUIRE(sinp.fail());
         REQUIRE(x == 0);
         sinp.clear();
         sinp >> ch;
         REQUIRE(ch == 'h');
-    }    
-    SUBCASE("incorrect input #4")
+    }
+
+    SUBCASE("incorrect inp #4")
     {
         istringstream sinp("");
         BigInt x;

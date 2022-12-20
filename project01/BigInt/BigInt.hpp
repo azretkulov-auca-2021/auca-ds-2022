@@ -11,13 +11,13 @@ class BigInt
     friend std::ostream &operator<<(std::ostream &out, const BigInt &x);
     friend std::istream &operator>>(std::istream &inp, const BigInt &x);
     friend BigInt operator+(const BigInt &x, const BigInt &y);
+    friend BigInt operator-(const BigInt &x, const BigInt &y);
     friend bool operator==(const BigInt &x, const BigInt &y);
     friend bool operator!=(const BigInt &x, const BigInt &y);
     friend bool operator<(const BigInt &x, const BigInt &y);
     friend bool operator>(const BigInt &x, const BigInt &y);
     friend bool operator>=(const BigInt &x, const BigInt &y);
     friend bool operator<=(const BigInt &x, const BigInt &y);
-
     std::vector<int> mDigits;
     bool mIsNegative;
 
@@ -53,8 +53,8 @@ public:
                 throw std::runtime_error("Incorrect format of BigInteger");
             }
 
-            mDigits.push_back(s[i] - '0');
-            ++i;
+        mDigits.push_back(s[i] - '0');
+        ++i;
         }
 
         if (mDigits.empty())
@@ -63,20 +63,49 @@ public:
         }
     }
 
-    BigInt(const int &i)
-        : mIsNegative(false)
+    BigInt(long long x)
+        : BigInt(std::to_string(x))
     {
-        int d = i;
-
-        if (d < 0)
-        {
-            mIsNegative = true;
-            d = -d;
-        }
-
-        mDigits.push_back(d);
     }
 
+    BigInt &operator+=(const BigInt &x)
+    {
+        *this = *this + x;
+        return *this;
+    }
+
+    BigInt &operator-=(const BigInt &x)
+    {
+        *this = *this - x;
+        return *this;
+    }
+
+    BigInt &operator-()
+    {
+        if (*this == 0 || *this == -0)
+        {
+            *this = 0;
+            return *this;
+        }
+
+        if (this->mIsNegative)
+        {
+            this->mIsNegative = false;
+            return *this;
+        }
+        else
+        {
+            this->mIsNegative = true;
+            return *this;
+        }
+    }
+
+    BigInt &operator+()
+    {
+        return *this;
+    }
+
+private:
     static BigInt addAbsValues(const BigInt &x, const BigInt &y)
     {
         auto itX = x.mDigits.rbegin();
@@ -87,6 +116,7 @@ public:
         auto itZ = z.mDigits.rbegin();
 
         int carry = 0;
+
         while (itX != x.mDigits.rend() || itY != y.mDigits.rend())
         {
             int s = carry;
@@ -112,7 +142,72 @@ public:
         {
             z.mDigits.erase(z.mDigits.begin());
         }
+
         return z;
+    }
+
+    static BigInt subAbsValues(const BigInt &x, const BigInt &y)
+    {
+        BigInt z;
+        z.mDigits.clear();
+
+        auto itX = x.mDigits.rbegin();
+        auto itY = y.mDigits.rbegin();
+
+        int borrow = 0;
+        while (itX != x.mDigits.rend())
+        {
+            int d = *itX - borrow;
+            ++itX;
+
+            if (itY != y.mDigits.rend())
+            {
+                d -= *itY;
+                ++itY;
+            }
+
+            if (d < 0)
+            {
+                d += 10;
+                borrow = 1;
+            }
+            else
+            {
+                borrow = 0;
+            }
+
+            z.mDigits.push_back(d);
+        }
+
+        while (z.mDigits.size() > 1 && z.mDigits.back() == 0)
+        {
+            z.mDigits.pop_back();
+        }
+
+        std::reverse(z.mDigits.begin(), z.mDigits.end());
+        return z;
+    }
+
+    static int compAbsValues(const BigInt &x, const BigInt &y)
+    {
+        if (x.mDigits.size() < y.mDigits.size())
+        {
+            return -1;
+        }
+
+        if (x.mDigits.size() > y.mDigits.size())
+        {
+            return 1;
+        }
+
+        for (int i = 0; i < (int)x.mDigits.size(); ++i)
+        {
+            if (x.mDigits[i] != y.mDigits[i])
+            {
+                return x.mDigits[i] - y.mDigits[i];
+            }
+        }
+        return 0;
     }
 };
 
@@ -142,7 +237,7 @@ inline std::istream &operator>>(std::istream &inp, BigInt &x)
     if (!(isdigit(ch) || ch == '+' || ch == '-'))
     {
         inp.putback(ch);
-        inp.setstate(std::ios_base::failbit); 
+        inp.setstate(std::ios_base::failbit);
         return inp;
     }
 
@@ -171,24 +266,102 @@ inline std::istream &operator>>(std::istream &inp, BigInt &x)
 }
 
 inline BigInt operator+(const BigInt &x, const BigInt &y)
-{
-    if (!x.mIsNegative && !y.mIsNegative)
+{   
+    if (x.mIsNegative == y.mIsNegative)
     {
-        return BigInt::addAbsValues(x, y);
+        BigInt z = BigInt::addAbsValues(x, y);
+        z.mIsNegative = x.mIsNegative;
+        return z;
     }
-    throw std::runtime_error("not implemented yet");
+
+    int c = BigInt::compAbsValues(x, y);
+    if (c == 0)
+    {
+        return BigInt();
+    }
+    else if (c > 0)
+    {
+        BigInt z = BigInt::subAbsValues(x, y);
+        z.mIsNegative = x.mIsNegative;
+        return z;
+    }
+    else 
+    {
+        BigInt z = BigInt::subAbsValues(y, x);
+        z.mIsNegative = y.mIsNegative;
+        return z;
+    }
+}
+
+inline BigInt operator-(const BigInt &x, const BigInt &y)
+{
+    if (!(x.mIsNegative) && y.mIsNegative)
+    {
+        BigInt z = BigInt::addAbsValues(x, y); 
+        z.mIsNegative = false;
+        return z;
+    }
+
+    if (x.mIsNegative && !(y.mIsNegative))
+    {
+        BigInt z = BigInt::addAbsValues(x, y); 
+        z.mIsNegative = true;
+        return z;
+    }
+
+    if (x.mIsNegative == y.mIsNegative)
+    {
+        int c = BigInt::compAbsValues(x, y); 
+        if (c == 0)
+        {
+            return BigInt();
+        }
+        else if (c > 0)
+        {
+            BigInt z = BigInt::subAbsValues(x, y);
+            z.mIsNegative = x.mIsNegative;
+            return z;
+        }
+        else
+        {
+            BigInt z = BigInt::subAbsValues(y, x);
+            z.mIsNegative = !y.mIsNegative;
+            return z;
+        }
+    }
+
+    return BigInt();
+}
+
+BigInt &operator++(BigInt &x) 
+{
+    x += 1;
+    return x;
+}
+
+BigInt operator++(BigInt &x, int) 
+{
+    BigInt z = x;
+    z += 1;
+    return z;
+}
+
+BigInt &operator--(BigInt &x)
+{
+    x -= 1;
+    return x;
+}
+
+BigInt operator--(BigInt &x, int)
+{
+    BigInt z = x;
+    z -= 1;
+    return z;
 }
 
 inline bool operator==(const BigInt &x, const BigInt &y)
 {
-    if ((x.mIsNegative && y.mIsNegative) || (!x.mIsNegative && !y.mIsNegative))
-    {
-        return x.mDigits == y.mDigits;
-    }
-    else
-    {
-        return false;
-    }
+    return x.mIsNegative == y.mIsNegative && x.mDigits == y.mDigits;
 }
 
 inline bool operator!=(const BigInt &x, const BigInt &y)
